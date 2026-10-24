@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1b100b">
+<meta name="description" content="A private interactive birthday surprise made for Hasti.">
+<title>HASTI PRIVÉ — Brown Edition</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap');
+:root{--bg:#101010;--panel:#171715;--gold:#d9bd82;--gold2:#f0dfb3;--cream:#f6f0e4;--muted:#a9a294;--line:rgba(217,189,130,.24)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--cream);font-family:'Vazirmatn',sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E");z-index:3}
+button{font:inherit;cursor:pointer}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 7vw;border-bottom:1px solid var(--line);letter-spacing:.12em}
+.brand{font-family:'Playfair Display',serif;color:var(--gold);font-size:17px;letter-spacing:.22em;direction:ltr}
+.topnote{font-size:10px;color:var(--muted);letter-spacing:.14em}
+.hero{min-height:83vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 20px 90px;position:relative;overflow:hidden}
+.orbit{position:absolute;width:min(75vw,560px);aspect-ratio:1;border:1px solid rgba(217,189,130,.12);border-radius:50%;animation:turn 38s linear infinite}
+.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid rgba(217,189,130,.12);border-radius:50%;inset:9%}
+.orbit:after{inset:20%}
+@keyframes turn{to{transform:rotate(360deg)}}
+.hero-content{position:relative;z-index:1;max-width:760px}
+.eyebrow{font-size:11px;letter-spacing:.25em;color:var(--gold);text-transform:uppercase}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(56px,12vw,120px);font-weight:400;letter-spacing:.06em;line-height:1;margin:28px 0 14px;color:var(--gold2);direction:ltr}
+.hero h2{font-size:clamp(20px,4vw,30px);font-weight:300;margin:0 0 18px}
+.hero p{max-width:490px;margin:0 auto;color:var(--muted);font-weight:300;line-height:2}
+.cta{margin-top:34px;background:var(--gold);color:#171510;border:1px solid var(--gold);padding:13px 28px;letter-spacing:.03em;transition:.25s}
+.cta:hover{background:transparent;color:var(--gold2);transform:translateY(-2px)}
+.scrollhint{position:absolute;bottom:25px;color:var(--muted);font-size:10px;letter-spacing:.2em}
+.section{padding:85px 7vw;max-width:1150px;margin:auto}
+.section-head{text-align:center;margin-bottom:36px}
+.kicker{color:var(--gold);font-size:10px;letter-spacing:.22em}
+.section h3{font-family:'Playfair Display','Vazirmatn',serif;font-size:clamp(28px,5vw,42px);font-weight:400;margin:12px 0}
+.sub{color:var(--muted);font-size:13px;line-height:2}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{min-height:220px;background:linear-gradient(145deg,#1c1c19,#131312);border:1px solid var(--line);padding:28px 24px;position:relative;transition:.25s}
+.card:hover{border-color:rgba(217,189,130,.6);transform:translateY(-4px)}
+.card .num{font-family:'Playfair Display',serif;color:var(--gold);font-size:25px;direction:ltr}
+.card h4{font-weight:500;margin:22px 0 8px;font-size:17px}
+.card p{font-size:12px;color:var(--muted);line-height:2;margin:0}
+.card button{margin-top:18px;background:none;border:0;border-bottom:1px solid var(--gold);color:var(--gold2);padding:5px 0;font-size:12px}
+.unlock{display:none;margin-top:15px;padding-top:14px;border-top:1px solid var(--line);color:var(--cream);font-size:12px;line-height:2}
+.card.open .unlock{display:block;animation:fade .4s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.game-wrap{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}
+.game-panel{border:1px solid var(--line);padding:30px;background:var(--panel)}
+.game-panel h4{font-weight:500;font-size:18px;margin:0 0 10px}
+.game-panel p{color:var(--muted);font-size:12px;line-height:2}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:20px}
+.option{padding:13px 10px;background:#20201c;border:1px solid #38352d;color:var(--cream);font-size:12px}
+.option:hover,.option.selected{border-color:var(--gold);color:var(--gold2)}
+.feedback{min-height:28px;color:var(--gold2);font-size:12px;margin-top:14px}
+.progress{height:2px;background:#343129;margin:18px 0}
+.progress span{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+.note{background:#e9dfca;color:#28231b;padding:35px;min-height:300px;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+.note:before{content:"";position:absolute;inset:9px;border:1px solid rgba(104,81,44,.35);pointer-events:none}
+.note-label{font-size:10px;letter-spacing:.2em;color:#806a42;direction:ltr}
+.note h4{font-family:'Playfair Display','Vazirmatn',serif;font-size:30px;font-weight:400;margin:20px 0 10px}
+.note p{font-size:14px;line-height:2.2;margin:0}
+.note .sign{align-self:flex-end;margin-top:25px;font-size:12px;color:#806a42}
+.final{padding:100px 20px;text-align:center;background:radial-gradient(ellipse at center,rgba(217,189,130,.09),transparent 60%)}
+.final .seal{width:76px;height:76px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;margin:0 auto 25px;color:var(--gold);font-family:'Playfair Display',serif;font-size:26px}
+.final h3{font-size:clamp(28px,6vw,48px);font-weight:300;margin:12px 0}
+.final p{max-width:540px;margin:0 auto;color:var(--muted);line-height:2.2;font-size:13px}
+footer{text-align:center;padding:24px;border-top:1px solid var(--line);font-size:10px;color:#777267;letter-spacing:.12em}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.84);z-index:10;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal-box{max-width:480px;width:100%;background:#191916;border:1px solid var(--gold);padding:38px 30px;text-align:center;position:relative}
+.modal-box .close{position:absolute;top:10px;left:13px;color:var(--muted);background:none;border:0;font-size:22px}
+.modal-box h3{font-family:'Playfair Display','Vazirmatn',serif;color:var(--gold2);font-size:30px;font-weight:400}
+.modal-box p{color:var(--muted);font-size:13px;line-height:2}
+.confetti{position:fixed;top:-15px;width:7px;height:12px;z-index:20;pointer-events:none;animation:fall 3.5s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(650deg);opacity:0}}
+@media(max-width:760px){.cards{grid-template-columns:1fr}.card{min-height:auto}.game-wrap{grid-template-columns:1fr}.section{padding:65px 6vw}.hero{min-height:78vh}.topbar{padding:18px 6vw}.topnote{font-size:9px}.note{min-height:270px}}
+
+.gift-section{padding:90px 7vw 100px;max-width:1000px;margin:auto;text-align:center;position:relative;overflow:hidden}
+.gift-section:before{content:"";position:absolute;inset:8% 8% 0;background:radial-gradient(ellipse at center,rgba(217,189,130,.08),transparent 68%);pointer-events:none}
+.gift-section>*{position:relative}
+.gift-intro{max-width:600px;margin:0 auto;color:var(--muted);font-size:13px;line-height:2}
+.gift-stage{position:relative;width:280px;height:245px;margin:26px auto 18px;display:flex;align-items:flex-end;justify-content:center;--glow:.07}
+.gift-glow{position:absolute;width:270px;height:220px;bottom:4px;border-radius:50%;background:radial-gradient(ellipse,rgba(240,223,179,.7),rgba(217,189,130,.2) 38%,transparent 72%);filter:blur(13px);opacity:var(--glow);transition:opacity .7s,transform .7s;transform:scale(.8)}
+.gift-stage[data-level="1"]{--glow:.2}.gift-stage[data-level="2"]{--glow:.34}.gift-stage[data-level="3"]{--glow:.53}.gift-stage[data-level="4"]{--glow:.9}
+.gift-stage[data-level="3"] .gift-glow,.gift-stage[data-level="4"] .gift-glow{transform:scale(1.08)}
+.gift-box{position:relative;width:190px;height:155px;margin-bottom:14px;filter:drop-shadow(0 15px 22px rgba(0,0,0,.34));transition:filter .6s,transform .6s}
+.box-base{position:absolute;bottom:0;left:12px;right:12px;height:112px;border:1px solid #b99a60;background:linear-gradient(115deg,#4f3820,#8c6b37 45%,#4c351f);border-radius:2px;box-shadow:inset 0 0 0 5px rgba(240,223,179,.08)}
+.box-lid{position:absolute;z-index:4;top:28px;left:2px;right:2px;height:38px;border:1px solid #d8bc80;background:linear-gradient(110deg,#806036,#d5b875 46%,#82613b);transform-origin:13% 90%;transition:transform .9s cubic-bezier(.2,.8,.2,1),top .9s;box-shadow:0 5px 12px rgba(0,0,0,.25)}
+.box-ribbon-v{position:absolute;z-index:3;left:50%;top:27px;bottom:0;width:28px;transform:translateX(-50%);background:linear-gradient(90deg,#b28c4c,#f0dfb3 50%,#b28c4c);opacity:.95}
+.box-ribbon-h{position:absolute;z-index:5;left:0;right:0;top:62px;height:18px;background:linear-gradient(#d7ba7b,#a98143);border-top:1px solid #f0dfb3;border-bottom:1px solid #8e6838}
+.box-bow{position:absolute;z-index:6;left:50%;top:4px;width:70px;height:40px;transform:translateX(-50%)}
+.box-bow:before,.box-bow:after{content:"";position:absolute;top:7px;width:34px;height:24px;border:3px solid #e4ca91;border-radius:70% 20% 70% 20%;background:linear-gradient(140deg,#c4a05e,#f0dfb3);box-shadow:0 2px 5px rgba(0,0,0,.25)}
+.box-bow:before{right:33px;transform:rotate(20deg)}.box-bow:after{left:33px;transform:scaleX(-1) rotate(20deg)}
+.gift-stage[data-level="1"] .gift-box,.gift-stage[data-level="2"] .gift-box,.gift-stage[data-level="3"] .gift-box{animation:giftPulse 2.8s ease-in-out infinite}
+@keyframes giftPulse{0%,100%{filter:drop-shadow(0 15px 22px rgba(0,0,0,.34))}50%{filter:drop-shadow(0 0 15px rgba(217,189,130,.25)) drop-shadow(0 15px 22px rgba(0,0,0,.3))}}
+.gift-stage.opening .box-lid,.gift-stage.opened .box-lid{transform:translate(-14px,-76px) rotate(-24deg);top:8px}
+.gift-stage.opening .gift-box,.gift-stage.opened .gift-box{filter:drop-shadow(0 0 30px rgba(240,223,179,.65));transform:translateY(-5px)}
+.gift-stage.opening .gift-glow,.gift-stage.opened .gift-glow{opacity:1;transform:scale(1.2)}
+.gift-stage.opened .box-base{background:linear-gradient(115deg,#69502b,#c9a65f 48%,#72512a)}
+.gift-steps{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:15px auto 22px;max-width:620px}
+.gift-step{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:9px 12px;color:#756f63;font-size:11px;transition:color .35s,border-color .35s,background .35s}
+.gift-step .step-dot{width:19px;height:19px;border:1px solid #625b4d;border-radius:50%;display:grid;place-items:center;font-size:10px;transition:all .35s}
+.gift-step.complete{color:var(--gold2);border-color:rgba(217,189,130,.65);background:rgba(217,189,130,.07)}
+.gift-step.complete .step-dot{color:#171510;background:var(--gold);border-color:var(--gold)}
+.gift-status{min-height:30px;color:var(--gold2);font-size:13px;line-height:2;margin:16px auto 0}
+.gift-button:disabled{cursor:not-allowed;background:#26241f;border-color:#403a2d;color:#777267;transform:none;opacity:.85}
+.gift-button:disabled:hover{background:#26241f;color:#777267}
+@media(max-width:760px){.gift-section{padding:70px 6vw 80px}.gift-step{padding:8px 10px}.gift-stage{transform:scale(.94);margin-top:10px;margin-bottom:4px}}
+.creator-signature{display:none;max-width:520px;margin:42px auto 0;padding:28px 22px 24px;border:1px solid rgba(217,189,130,.34);background:linear-gradient(145deg,rgba(217,189,130,.07),rgba(23,23,21,.4));position:relative;overflow:hidden}
+.creator-signature:before{content:"";position:absolute;inset:7px;border:1px solid rgba(217,189,130,.12);pointer-events:none}
+.creator-signature.reveal{display:block;animation:signatureIn 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes signatureIn{from{opacity:0;transform:translateY(15px);filter:blur(4px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+.signature-star{color:var(--gold);font-size:19px;margin-bottom:10px}
+.signature-label{font-size:9px;letter-spacing:.22em;color:var(--muted);direction:ltr}
+.signature-name{font-family:'Playfair Display',serif;font-size:clamp(33px,7vw,48px);letter-spacing:.25em;color:var(--gold2);direction:ltr;margin:10px 0 3px;padding-left:.25em}
+.signature-byline{font-size:12px;color:var(--cream);direction:ltr;letter-spacing:.04em;margin:0 0 8px}
+.signature-motto{font-family:'Playfair Display',serif;font-size:13px;font-style:italic;color:#a99b7f;direction:ltr;margin:0}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* HASTI'S BROWN-CHOCOLATE EDITION */
+:root{--bg:#1b100b;--panel:#2a1a12;--gold:#c99a6a;--gold2:#efd7b8;--cream:#f7ecdf;--muted:#c0a891;--line:rgba(201,154,106,.28)}
+body{background:radial-gradient(ellipse at 15% 10%,rgba(145,91,56,.22),transparent 38%),radial-gradient(ellipse at 90% 75%,rgba(190,135,88,.12),transparent 34%),#1b100b;color:var(--cream)}
+.topbar{background:rgba(27,16,11,.35)}
+.card{background:linear-gradient(145deg,#3a2519,#24160f)}
+.card:hover{border-color:rgba(239,215,184,.7);background:linear-gradient(145deg,#4a3020,#2b1a11)}
+.game-panel,.modal-box{background:#2a1a12}
+.options .option{background:#38251a;border-color:#63452f;color:var(--cream)}
+.options .option:hover,.options .option.selected{border-color:var(--gold);color:var(--gold2);background:#4a3020}
+.note{background:#ead6bd;color:#352217}
+.note:before{border-color:rgba(104,68,40,.35)}
+.note-label,.note .sign{color:#8a5b37}
+.final{background:radial-gradient(ellipse at center,rgba(201,154,106,.16),transparent 62%)}
+.modal{background:rgba(14,8,5,.88)}
+.gift-glow{background:radial-gradient(ellipse,rgba(239,215,184,.7),rgba(201,154,106,.25) 38%,transparent 72%)}
+.box-base{border-color:#b78356;background:linear-gradient(115deg,#4a2b1b,#986844 45%,#48291a);box-shadow:inset 0 0 0 5px rgba(239,215,184,.08)}
+.box-lid{border-color:#d8b18a;background:linear-gradient(110deg,#805033,#d7b18b 46%,#815238)}
+.box-ribbon-v{background:linear-gradient(90deg,#b47e50,#f0d7b8 50%,#b47e50)}
+.box-ribbon-h{background:linear-gradient(#d7b18b,#a87349);border-top-color:#f0d7b8;border-bottom-color:#8e5b38}
+.box-bow:before,.box-bow:after{border-color:#e4c39f;background:linear-gradient(140deg,#c49363,#f0d7b8)}
+.gift-section:before{background:radial-gradient(ellipse at center,rgba(201,154,106,.14),transparent 68%)}
+footer{color:#a58a74}
+
+/* Mobile-first refinement: preserve the desktop design, improve small screens */
+@media (max-width: 760px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { width: 100%; overflow-x: clip; }
+  .topbar { gap: 12px; padding: 16px 5vw; }
+  .brand { font-size: 14px; letter-spacing: .16em; white-space: nowrap; }
+  .topnote { max-width: 48%; text-align: left; font-size: 8px; line-height: 1.6; letter-spacing: .08em; }
+  .hero { min-height: min(82svh, 760px); padding: 66px 7vw 76px; }
+  .orbit { width: min(88vw, 460px); }
+  .hero-content { width: 100%; max-width: 560px; }
+  .eyebrow { font-size: 9px; letter-spacing: .16em; line-height: 1.9; }
+  .hero h1 { font-size: clamp(54px, 17vw, 88px); margin: 23px 0 12px; letter-spacing: .04em; }
+  .hero h2 { font-size: clamp(19px, 5.2vw, 25px); line-height: 1.8; }
+  .hero p { max-width: 34em; margin-inline: auto; font-size: 14px; line-height: 2.1; }
+  .cta, button { min-height: 46px; touch-action: manipulation; }
+  .cta { padding: 12px 19px; }
+  .scrollhint { bottom: 20px; font-size: 8px; letter-spacing: .14em; }
+  .section { padding: 58px 5vw; }
+  .section-head { margin-bottom: 25px; }
+  .section-head h3, .final h3, .gift-section h3 { font-size: clamp(24px, 7vw, 34px); line-height: 1.65; }
+  .section-head p, .gift-intro, .final p { font-size: 14px; line-height: 2.05; }
+  .cards { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+  .card { min-height: 0; padding: 24px 20px; border-radius: 3px; }
+  .card h4 { font-size: 20px; }
+  .card p, .note { font-size: 14px; line-height: 2.05; }
+  .note { min-height: 0; padding: 24px 19px; }
+  .game-wrap { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .game-panel { min-width: 0; padding: 20px 17px; }
+  .options { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .option { min-height: 46px; padding: 12px 14px; line-height: 1.8; }
+  .progress { max-width: 100%; }
+  .gift-section { padding: 58px 5vw 70px; }
+  .gift-stage { transform: scale(.88); transform-origin: top center; margin: 8px auto -8px; width: 100%; }
+  .gift-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; max-width: 360px; margin-inline: auto; }
+  .gift-step { justify-content: center; gap: 8px; padding: 10px 8px; min-width: 0; font-size: 12px; }
+  .step-dot { flex: 0 0 auto; }
+  .gift-status { font-size: 13px; line-height: 2; padding-inline: 6px; }
+  .gift-button { max-width: 100%; white-space: normal; }
+  .modal { padding: 16px; }
+  .modal-box { width: 100%; max-width: 440px; max-height: 86svh; overflow-y: auto; padding: 25px 18px; }
+  .creator-signature { margin-top: 30px; padding: 24px 15px 20px; }
+  .signature-name { font-size: clamp(30px, 10vw, 42px); }
+}
+@media (max-width: 390px) {
+  .topbar { padding-inline: 4vw; }
+  .brand { font-size: 12px; letter-spacing: .12em; }
+  .topnote { font-size: 7px; }
+  .hero { padding-inline: 5vw; }
+  .hero h1 { font-size: clamp(48px, 16vw, 66px); }
+  .hero p { font-size: 13px; }
+  .section, .gift-section { padding-inline: 4vw; }
+  .card, .game-panel { padding-inline: 15px; }
+  .gift-stage { transform: scale(.78); margin-bottom: -22px; }
+}
+@media (hover: none) and (pointer: coarse) {
+  .card:hover, .option:hover, .cta:hover { transform: none; }
+}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">HASTI · PRIVÉ</div>
+  <div class="topnote">A LITTLE SOMETHING, JUST FOR YOU</div>
+</header>
+<main>
+<section class="hero">
+  <div class="orbit"></div>
+  <div class="hero-content">
+    <div class="eyebrow">A PRIVATE BIRTHDAY EDITION · Nº 01</div>
+    <h1>HASTI</h1>
+    <h2>امشب، همه‌چیز برای توست.</h2>
+    <p>برای کسی که روزهای معمولی کلاس زبان رو یه‌کم قشنگ‌تر می‌کنه. این یه تبریک معمولی نیست؛ یه گوشه‌ی کوچیک از اینترنت، فقط برای توئه.</p>
+    <button class="cta" onclick="document.getElementById('surprises').scrollIntoView({behavior:'smooth'})">ورود به سورپرایزها <span>↙</span></button>
+  </div>
+  <div class="scrollhint">SCROLL TO DISCOVER · ↓</div>
+</section>
+
+<section class="section" id="surprises">
+  <div class="section-head">
+    <div class="kicker">THE PRIVATE COLLECTION</div>
+    <h3>سه پاکت، سه سورپرایز</h3>
+    <div class="sub">هر کدوم رو باز کن. هیچ‌کدوم شبیه تبریک‌های کپی‌پیستی نیستن.</div>
+  </div>
+  <div class="cards">
+    <article class="card" data-gift-index="1">
+      <div class="num">01 / NOTE</div><h4>یک یادداشت خصوصی</h4>
+      <p>چند خط برای روزی که باید بیشتر از همیشه بهت خوش بگذره.</p>
+      <button onclick="toggleCard(this)">باز کردن پاکت +</button>
+      <div class="unlock">هستی، امیدوارم سال جدید زندگیت پر از اتفاق‌هایی باشه که بعداً با ذوق تعریفشون کنی. از اون روزهایی که حتی وسط شلوغی‌ها، یه دلیل کوچیک برای لبخند پیدا می‌کنی. تولدت مبارک، رفیق کلاس زبان! ♡</div>
+    </article>
+    <article class="card" data-gift-index="2">
+      <div class="num">02 / MEMORY</div><h4>پرونده‌ی کلاس زبان</h4>
+      <p>گزارش محرمانه از یک دوستی که توی کلاس شکل گرفت.</p>
+      <button onclick="toggleCard(this)">باز کردن پرونده +</button>
+      <div class="unlock">موضوع پرونده: هستی. اتهام‌ها: بهتر کردن حال‌وهوای کلاس، تبدیل بعضی روزها به خاطره و احتمالاً خندوندن آدم‌ها وقتی قرار بوده فقط درس بخونن. حکم نهایی: ادامه‌ی دوستی، بدون امکان تجدیدنظر. ✦</div>
+    </article>
+    <article class="card" data-gift-index="3">
+      <div class="num">03 / WISH</div><h4>آرزوی مخصوص تو</h4>
+      <p>یک آرزو برای سال تازه‌ات؛ نه از آن آرزوهای تکراری.</p>
+      <button onclick="toggleCard(this)">باز کردن پاکت +</button>
+      <div class="unlock">آرزو می‌کنم جرئت دنبال کردن چیزهایی رو داشته باشی که واقعاً خوشحالت می‌کنن؛ آدم‌های درست کنارت بمونن و فرصت‌های قشنگ، درست وقتی که انتظارشون رو نداری پیداشون بشه. و البته نمره‌های زبانت هم همیشه درخشان باشن! ✨</div>
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="kicker">A TINY CHALLENGE</div>
+    <h3>اول انتخاب کن، بعد جایزه بگیر</h3>
+    <div class="sub">یک تست خیلی کوتاه با یک پایان مخصوص تولد.</div>
+  </div>
+  <div class="game-wrap">
+    <div class="game-panel">
+      <div class="kicker">QUESTION <span id="qnum">01</span> / 03</div>
+      <h4 id="question">اگه روز تولدت یه حال‌وهوای خاص داشت، کدوم رو انتخاب می‌کردی؟</h4>
+      <p id="hint">جواب درست و غلط نداریم؛ این تست علمی نیست، دانشمندا هنوز مشغول کیک خوردنن.</p>
+      <div class="options" id="options">
+        <button class="option" onclick="answer(this,0)">شیک و آروم ✨</button>
+        <button class="option" onclick="answer(this,1)">پر از خنده 🥂</button>
+        <button class="option" onclick="answer(this,2)">ماجراجویی 🎀</button>
+        <button class="option" onclick="answer(this,3)">یه سورپرایز بزرگ 🎁</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <div class="progress"><span id="bar"></span></div>
+    </div>
+    <div class="note">
+      <div class="note-label">A NOTE FOR HASTI · SEALED WITH CARE</div>
+      <div>
+        <h4>Dear Hasti,</h4>
+        <p>بعضی آدما حتی بدون اینکه خودشون بدونن، یه بخش کوچیک از روز رو بهتر می‌کنن. خوشحالم که توی کلاس زبان باهات آشنا شدم و امیدوارم امسال برات پر از تجربه‌های قشنگ و شروع‌های تازه باشه.</p>
+      </div>
+      <div class="sign">با آرزوی بهترین‌ها برای تو ♡</div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="seal">H</div>
+  <div class="kicker">A LITTLE BIRTHDAY MOMENT</div>
+  <h3>Happy Birthday, Hasti.</h3>
+  <p>تا اینجا سه پاکت رو کشف کردی و به چند سؤال جواب دادی. حالا چیزی مونده که از اول منتظرت بوده. برای باز کردنش، سرنخ‌ها رو کامل کن. 🤍</p>
+</section>
+
+<section class="gift-section" id="gift">
+  <div class="kicker">THE FINAL GIFT · MADE JUST FOR YOU</div>
+  <h3>جعبه‌ای که منتظر تو بود 🎁</h3>
+  <p class="gift-intro">هر پاکت یه ذره از جعبه رو بیدار می‌کنه. وقتی هر سه پاکت رو باز کنی و تست رو به پایان برسونی، قفل هدیه آزاد می‌شه.</p>
+
+  <div class="gift-stage" id="giftStage" data-level="0" aria-label="جعبه هدیه‌ی طلایی">
+    <div class="gift-glow"></div>
+    <div class="gift-box" id="giftBox">
+      <div class="box-base"></div>
+      <div class="box-ribbon-v"></div>
+      <div class="box-ribbon-h"></div>
+      <div class="box-lid"></div>
+      <div class="box-bow"></div>
+    </div>
+  </div>
+
+  <div class="gift-steps" aria-label="مراحل باز شدن هدیه">
+    <div class="gift-step" data-step="1"><span class="step-dot">1</span><span>یادداشت</span></div>
+    <div class="gift-step" data-step="2"><span class="step-dot">2</span><span>پرونده</span></div>
+    <div class="gift-step" data-step="3"><span class="step-dot">3</span><span>آرزو</span></div>
+    <div class="gift-step" data-step="4"><span class="step-dot">✦</span><span>تست تولد</span></div>
+  </div>
+
+  <p class="gift-status" id="giftStatus" aria-live="polite">برای شروع، یکی از سه پاکت بالا رو باز کن.</p>
+  <button class="cta gift-button" id="giftOpenBtn" onclick="revealGift()" disabled>جعبه هنوز قفله 🔒</button>
+
+  <div class="creator-signature" id="creatorSignature" aria-hidden="true">
+    <div class="signature-star">✦</div>
+    <div class="signature-label">THE PERSON BEHIND THE MAGIC</div>
+    <div class="signature-name">ELINA</div>
+    <p class="signature-byline">Designed &amp; Coded by Elina</p>
+    <p class="signature-motto">A little piece of code, made with a lot of heart.</p>
+  </div>
+</section>
+</main>
+<footer>MADE WITH CARE · HASTI'S BIRTHDAY EDITION · ✦</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal()" aria-label="بستن">×</button>
+    <div class="kicker">JUST FOR YOU</div>
+    <h3 id="modalTitle">یک شروع قشنگ‌تر</h3>
+    <p id="modalText">تولدت مبارک هستی!</p>
+    <button class="cta" onclick="closeModal()">با عشق، از اینجا به بعد ✦</button>
+  </div>
+</div>
+<script>
+const openedCards = new Set();
+let quizCompleted = false;
+let giftHasOpened = false;
+
+function toggleCard(button){
+  const card=button.closest('.card');
+  const open=card.classList.toggle('open');
+  button.textContent=open?'بستن پاکت −':'باز کردن پاکت +';
+  if(open && card.dataset.giftIndex){
+    openedCards.add(Number(card.dataset.giftIndex));
+    updateGiftProgress();
+  }
+}
+const questions=[
+ {q:'اگه روز تولدت یه حال‌وهوای خاص داشت، کدوم رو انتخاب می‌کردی؟',hint:'جواب درست و غلط نداریم؛ این تست علمی نیست، دانشمندا هنوز مشغول کیک خوردنن.',opts:['شیک و آروم ✨','پر از خنده 🥂','ماجراجویی 🎀','یه سورپرایز بزرگ 🎁']},
+ {q:'کدوم هدیه بیشتر به دلت می‌شینه؟',hint:'انتخابت رو ثبت کن؛ داریم به بخش آخر نزدیک می‌شیم.',opts:['یه نامه‌ی دست‌نویس 💌','یه خاطره‌ی مشترک 📸','یه روز پر از تفریح 🎡','چیزی که مدت‌ها می‌خواستم 🎁']},
+ {q:'برای سال جدید زندگیت، بیشتر از همه چی می‌خوای؟',hint:'آخرین انتخاب، بعدش یه سورپرایز کوچولو.',opts:['آرامش و حال خوب 🤍','موفقیت‌های بزرگ ✨','آدم‌های خوب کنارم 🫶🏻','اتفاق‌های غیرمنتظره 🎉']}
+];
+let current=0,answers=[];
+function answer(btn,index){
+ if(btn.disabled)return;
+ answers[current]=index;
+ document.querySelectorAll('#options .option').forEach(b=>{b.disabled=true;b.classList.remove('selected')});
+ btn.classList.add('selected');
+ const feedback=document.getElementById('feedback');
+ feedback.textContent=['انتخاب شیک و باکلاس ثبت شد. ✨','این انرژی رو باید برای کل سال نگه داشت. 🥂','ماجراجویی؟ سال جدید آماده باشه! 🎀','پس سورپرایزها دقیقاً انتخاب درستی بودن. 🎁'][index];
+ document.getElementById('bar').style.width=((current+1)/3*100)+'%';
+ setTimeout(()=>{
+  current++;
+  if(current>=questions.length){openQuizResult();return}
+  const q=questions[current];document.getElementById('qnum').textContent=String(current+1).padStart(2,'0');
+  document.getElementById('question').textContent=q.q;document.getElementById('hint').textContent=q.hint;
+  document.getElementById('options').innerHTML=q.opts.map((o,i)=>`<button class="option" onclick="answer(this,${i})">${o}</button>`).join('');
+  feedback.textContent='';
+ },700);
+}
+function showModal(title,text){document.getElementById('modalTitle').textContent=title;document.getElementById('modalText').textContent=text;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function openQuizResult(){
+ quizCompleted = true;
+ updateGiftProgress();
+ confetti();
+ showModal('پرونده تکمیل شد، هستی!','نتیجه‌ی تست: تو لایق یه سال پر از لحظه‌های قشنگی. امیدوارم هر سه انتخابت به واقعیت تبدیل بشن. تولدت مبارک! ♡');
+ document.getElementById('question').textContent='پرونده‌ی تولد با موفقیت تکمیل شد.';
+ document.getElementById('hint').textContent='آخرین مرحله هم تکمیل شد. جعبه‌ی هدیه منتظرته.';
+ const options = document.getElementById('options');
+ options.innerHTML = '';
+ const giftLink = document.createElement('button');
+ giftLink.className = 'option';
+ giftLink.style.gridColumn = '1 / -1';
+ giftLink.textContent = 'رفتن به جعبه‌ی هدیه ✦';
+ giftLink.addEventListener('click', () => document.getElementById('gift').scrollIntoView({behavior:'smooth'}));
+ options.appendChild(giftLink);
+ document.getElementById('feedback').textContent='۳ از ۳ انتخاب ثبت شد!';
+}
+
+function updateGiftProgress(){
+  const cardCount = openedCards.size;
+  const level = cardCount + (quizCompleted ? 1 : 0);
+  const stage = document.getElementById('giftStage');
+  stage.dataset.level = String(level);
+
+  document.querySelectorAll('.gift-step').forEach(step => {
+    const n = Number(step.dataset.step);
+    step.classList.toggle('complete', n <= cardCount || (n === 4 && quizCompleted));
+  });
+
+  const status = document.getElementById('giftStatus');
+  const button = document.getElementById('giftOpenBtn');
+  if (giftHasOpened) {
+    status.textContent = 'هدیه باز شده؛ این لحظه فقط مال توئه. ♡';
+    button.textContent = 'هدیه باز شد ♡';
+    button.disabled = true;
+    return;
+  }
+  if (level === 0) status.textContent = 'برای شروع، یکی از سه پاکت بالا رو باز کن.';
+  else if (cardCount < 3) status.textContent = `جعبه کمی روشن‌تر شده! ${cardCount} پاکت از ۳ پاکت باز شده. هنوز ${3-cardCount} پاکت مونده.`;
+  else if (!quizCompleted) status.textContent = 'هر سه پاکت باز شدن! فقط تست کوتاه تولد مونده تا قفل هدیه آزاد بشه. ✨';
+  else status.textContent = 'همه‌ی سرنخ‌ها کامل شدن. قفل بازه، هستی؛ وقتشه هدیه‌ات رو ببینی! ✨';
+
+  button.disabled = !(cardCount === 3 && quizCompleted);
+  button.textContent = button.disabled ? 'جعبه هنوز قفله 🔒' : 'باز کردن جعبه‌ی هدیه ✦';
+}
+
+function revealGift(){
+  if (openedCards.size < 3 || !quizCompleted || giftHasOpened) return;
+  const stage = document.getElementById('giftStage');
+  const button = document.getElementById('giftOpenBtn');
+  stage.classList.add('opening');
+  button.disabled = true;
+  button.textContent = 'در حال باز شدن...';
+  document.getElementById('giftStatus').textContent = 'یه سورپرایز کوچیک فقط برای تو...';
+  setTimeout(() => {
+    stage.classList.remove('opening');
+    stage.classList.add('opened');
+    giftHasOpened = true;
+    confetti();
+    const signature = document.getElementById('creatorSignature');
+    signature.classList.add('reveal');
+    signature.setAttribute('aria-hidden', 'false');
+    updateGiftProgress();
+    showModal('برای تو، هستی عزیزم ♡','امیدوارم سال جدید زندگیت از اون سال‌هایی باشه که آخرش به خودت می‌گی: چقدر خوب شد که شروعش کردم. ممنون که یکی از آدم‌های قشنگ کلاس زبانمی. تولدت مبارک! 🤍');
+  }, 950);
+}
+function confetti(){
+ const colors=['#d9bd82','#f0dfb3','#f6f0e4','#a58a58'];
+ for(let i=0;i<65;i++){const el=document.createElement('i');el.className='confetti';el.style.left=Math.random()*100+'vw';el.style.background=colors[Math.floor(Math.random()*colors.length)];el.style.animationDelay=Math.random()*1.2+'s';el.style.transform='rotate('+Math.random()*180+'deg)';document.body.appendChild(el);setTimeout(()=>el.remove(),5000)}
+}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+updateGiftProgress();
+</script>
+</body>
+</html>
